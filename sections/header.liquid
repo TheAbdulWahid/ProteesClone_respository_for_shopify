@@ -1,0 +1,384 @@
+<!-- Anouncement Bar -->
+<div class="slider py-2 text-center bg-black text-white cursor-pointer">
+  <!-- Delivery Anouncement -->
+  <div>
+    <h3 class="font-bold">DELIVERY TIME
+      <span class="font-normal text-base">{{ section.settings.delivery_anouncement }}</span>
+    </h3>
+  </div>
+
+  <!-- Free Shipping -->
+  <div>
+    <h3 class="font-bold">FREE SHIPPING
+      <span class="font-normal text-base">{{ section.settings.free_shipping }}</span>
+    </h3>
+  </div>
+
+  <!-- Return -->
+  <div>
+    <h3 class="font-bold">HASSLE-FREE RETURN
+      <span class="font-normal text-base">{{ section.settings.free_shipping }}</span>
+    </h3>
+  </div>
+
+</div>
+<!-- Container -->
+<div class="max-w-7xl mx-auto px-4" x-data="{ open : false}">
+
+  <!-- Header -->
+  <header class="header relative">
+    <!-- Social Media icons -->
+    <div class="flex justify-end space-x-3 py-3">
+      <!-- Instagram -->
+      <div class="cursor-pointer">
+        <a href="#">
+          {% render 'icon-instagram' %}
+        </a>
+      </div>
+
+      <!-- Facebook -->
+      <div class="cursor-pointer">
+        <a href="#">
+          {% render 'icon-facebook' %}
+        </a>
+      </div>
+    </div>
+    <!-- Main Header Content -->
+    <div class="flex justify-between items-center py-8 bg-white">
+      <!-- Search -->
+      <div>
+        {% render 'icon-search' %}
+      </div>
+
+      <!-- Navigational bar -->
+      <nav class="relative">
+        <ul class="flex space-x-8 items-center">
+          {% for link in linklists.main-menu.links %}
+
+            {% if link.links != blank %}
+
+              {% assign link_handle = link.handle %}
+
+              <!-- Menu with ChildLinks -->
+              <div x-data="{ {{ link_handle }} : false }">
+                <button x-on:click="{{ link_handle }} = !{{ link_handle }}" @click.away="{{ link_handle }} = false">
+                  <li data-btnId class="cursor-pointer uppercase menuitem w-[100px]">
+                    {{ link.title }}
+
+                    <!-- Sublinks -->
+                    <div class="py-8 child fixed w-2/4 bg-red-900 text-white px-6 top-[200px] z-[100]" x-show="{{ link_handle }}">
+                      <div class="grid grid-cols-2 gap-5 text-left">
+                        {% for childlink in link.links %}
+                          <div>
+                            <a href="#">{{ childlink.title }}</a>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+
+                  </li>
+                </button>
+              </div>
+
+
+
+            {% else %}
+
+              {% if forloop.index == 3 %}
+                <a href="{{ shop.url }}">
+                  <div class="mx-4">
+                    <img
+                      class="brand_logo"
+                      src="{{ shop.brand.logo | img_url: 'master' }}"
+                      width="{{ section.settings.image_size }}%">
+                  </div>
+                </a>
+
+                {% continue %}
+
+              {% else %}
+                <li class="cursor-pointer uppercase menuitem">
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+
+
+              {% endif %}
+            {% endif %}
+
+
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <!-- Cart -->
+      <div>
+        <button x-on:click="open = true" class="relative">
+          {% render 'icon-cart' %}
+          {% if cart.item_count > 0 %}
+            {% render 'icon-red' %}
+          {% endif %}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gray Window -->
+  <div class="w-full fixed z-10 bg-gray-200 h-screen top-0 left-0 opacity-70" x-show="open"></div>
+
+  <!-- Cart Window -->
+  <div
+    x-show="open"
+    @click.away="open = false"
+    class="fixed right-0 top-0 bottom-0 max-h-screen w-[450px] bg-white px-5 overflow-x-auto z-20 overflow-hidden">
+    <div class="h-screen relative">
+      <div>
+        <!-- Cart and Close Button -->
+        <div class="flex justify-between items-center py-10">
+          <!-- Cart Heading -->
+          <div>
+            <h2 class="text-3xl font-medium">
+              Cart</h2>
+          </div>
+
+          <!-- Close Button -->
+          <div>
+            <button x-on:click="open = false">
+              {% render 'icon-close' %}
+            </button>
+          </div>
+        </div>
+
+
+
+        <hr>
+
+        <!-- Cart Data -->
+        <div class="py-6 max-h-[calc(100vh-320px)] overflow-hidden overflow-y-auto">
+          {% if cart.item_count > 0 %}
+            <form
+              action="{{ routes.cart_url }}"
+              method="POST"
+              novalidate
+              class="h-full flex flex-col justify-between overflow-hidden">
+              <div>
+                {% for item in cart.items %}
+                  {% if forloop.index == 1 %}
+                    <div class="h-[1px] bg-gray-300 w-full my-4 hidden"></div>
+
+                  {% else %}
+                    <div class="h-[1px] bg-gray-300 w-full my-4"></div>
+
+
+                  {% endif %}
+                  <div class="flex items-center space-x-10">
+                    <!-- Image -->
+                    <div>
+                      <a href="{{ item.url }}">
+                        {% if item.image %}
+                          <img
+                            src="{{ item.image | img_url: 'medium' }}"
+                            alt="{{ item.title | escape }}"
+                            class="object-cover">
+
+                        {% else %}
+                          {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-cover border' }}
+                        {% endif %}
+                      </a>
+                    </div>
+
+                    <!-- Name, quantity selector, and price -->
+                    <div>
+                      <!-- Name -->
+                      <div class="my-3">
+                        <a href="{{ item.url }}">{{ item.product.title }}</a>
+                      </div>
+
+                      <!-- Variant -->
+                      <div class="my-3">
+                        <p>{{ item.variant.title }}</p>
+                      </div>
+
+                      <!-- Quantity and Price -->
+                      <div class="flex items-center space-x-10">
+                        <!-- Quantity -->
+                        <div data-quantityDiv="{{ forloop.index }}" class="max-w-[100px] min-w-[50px] border flex justify-between space-x-5 px-4 items-center text-center h-[50px] my-3">
+                          <!-- Minus -->
+                          <input value="-"
+                            id="minus"
+                            class="focus:outline-none w-[10px] text-center"
+                            data-minus="{{ forloop.index }}">
+
+                          <!-- Number -->
+                          <input type="text"
+                            value="{{ item.quantity }}"
+                            name="updates[]"
+                            class="focus:outline-none w-[10px] text-center"
+                            id="itemVal"
+                            data-quantity="{{ forloop.index }}">
+
+                          <!-- Plus -->
+                          <input
+                            value="+"
+                            id="plus"
+                            class="focus:outline-none w-[10px] text-center"
+                            data-plus="{{ forloop.index }}">
+                        </div>
+                        <!-- Price -->
+                        <div>
+                          <p>{{ item.line_price | money }}</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                {% endfor %}
+
+                <!-- Order Note -->
+                <div class="border-t-[1px] border-gray-200 mt-3 pt-3">
+                  <label for="order_note" class="w-full uppercase text-gray-400 font-light py-3 inline-block">Order Note</label>
+                  <textarea
+                    id="order_note"
+                    class="w-full border"
+                    rows="3"></textarea>
+                </div>
+              </div>
+
+
+              <!-- Subtotal and checkOut -->
+              <div class="px-5 py-4 z-10 bg-white absolute bottom-0 left-0 right-0">
+                <hr class="py-3">
+                <!-- Subtotal -->
+                <div class="flex justify-between items-center my-3">
+                  <!-- subtotal Heading -->
+                  <div>
+                    <h3>Subtotal</h3>
+                  </div>
+
+
+                  <!-- Subtotal Price -->
+                  <div>
+                    <p>{{ cart.items_subtotal_price | money }}</p>
+                  </div>
+                </div>
+
+                <!-- Note -->
+                <div class="my-3">
+                  <p>{{ section.settings.important_note }}</p>
+                </div>
+
+                <!-- Checkout button -->
+                <div class="my-3">
+                  <button
+                    type="submit"
+                    name="checkout"
+                    class="bg-gray-900 py-2 w-full text-white font-bold">Checkout</button>
+                </div>
+
+              </div>
+            </form>
+
+
+
+          {% else %}
+            <div>{{ section.settings.cart_status }}</div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<script>
+  let minus = document.querySelectorAll("input[data-minus]");
+  let quantity = document.querySelectorAll("input[data-quantity]");
+  let plus = document.querySelectorAll("input[data-plus]");
+
+
+
+  function createClickHandler(buttonIndex) {
+    return function() {
+      console.log("Clicked minus button " + buttonIndex);
+    };
+  }
+
+  for (let i = 0; i < minus.length; i++) {
+    const minusButton = minus[i];
+    const clickHandler = createClickHandler(i + 1);
+    minusButton.addEventListener("click", clickHandler);
+  }
+
+  quantity.forEach((e) => {
+    e
+      .previousElementSibling
+      .addEventListener('click', () => {
+        if (e.value >= 1) {
+          e.value --;
+        }
+      })
+
+      e
+      .nextElementSibling
+      .addEventListener('click', () => {
+        e.value ++;
+      })
+
+  })
+</script>
+
+
+{% schema %}
+  {
+    "name": "header",
+    "settings": [
+      {
+        "type": "text",
+        "id": "delivery_anouncement",
+        "default": "All orders will be deliver with in a week",
+        "label": "Delivery Anouncement"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping",
+        "default": "On all Orders over 2000",
+        "label": "Free Shipping"
+      },
+      {
+        "type": "text",
+        "id": "return",
+        "default": "14 days postage paid return",
+        "label": "Return"
+      },
+      {
+        "type": "range",
+        "id": "image_size",
+        "default": 100,
+        "unit": "%",
+        "step": 1,
+        "label": "Image Size",
+        "min": 60,
+        "max": 100
+      }, {
+        "type": "font_picker",
+        "id": "font",
+        "label": "Font Family",
+        "default": "sans-serif"
+      }, {
+        "type": "text",
+        "id": "cart_status",
+        "default": "Your Cart is Empty",
+        "label": "Cart Status"
+      }, {
+        "type": "text",
+        "id": "important_note",
+        "default": "Shipping, taxes, and discounts codes calculated at checkout.",
+        "label": "Shipping Tax note"
+      }
+
+    ]
+  }
+{% endschema %}

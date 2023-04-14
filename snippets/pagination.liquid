@@ -1,0 +1,36 @@
+{% if pagination.pages > 0 %}
+  <nav role="navigation">
+    <ul class="flex justify-center items-center my-8 space-x-10">
+      {% if pagination.previous %}
+        <!-- Previous -->
+        <li>
+          <a href="{{ pagination.previous.url }}" class="bg-black text-white p-3 inline-block">{% render 'icon-previous' %}</a>
+        </li>
+      {% endif %}
+
+      {% for part in pagination.parts %}
+
+        {% if part.is_link %}
+          <a href="{{ part.url }}">{{ part.title }}</a>
+        {% else %}
+
+          <span class="text-gray-400">
+            {{ part.title }}
+          </span>
+        {% endif %}
+
+
+      {% endfor %}
+
+      {% if pagination.next %}
+        <!-- Next -->
+        <li>
+          <a href="{{ pagination.next.url }}" class="bg-black text-white p-3 inline-block">{% render 'icon-next' %}</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+{% else %}
+  {{ "GoodBye World" }}
+{% endif %}

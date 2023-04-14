@@ -1,0 +1,39 @@
+<hr>
+
+<div class="max-w-7xl mx-auto px-6">
+  <footer>
+
+    <div class="grid grid-cols-3 gap-x-10 py-12">
+      <!-- First Column -->
+      {% for link in linklists.footer.links %}
+        <div data-footer-id="{{ link.handle }}" class="px-10 text-left">
+          {% if link.links != blank %}
+            <p class="mb-5">{{ link.title }}</p>
+
+            {% for childlink in link.links %}
+              <div>
+                <a href="{{ childlink.url }}" class="block mb-2">{{ childlink.title }}</a>
+              </div>
+            {% endfor %}
+
+          {% else %}
+            <p class="mb-5">{{ link.title }}</p>
+          {% endif %}
+
+
+        </div>
+
+
+      {% endfor %}
+    </div>
+
+
+
+    <div class="flex justify-center py-10">
+      {% for link in linklists.copyright.links %}
+        <p>{{ link.title }}</p>
+      {% endfor %}
+    </div>
+
+  </footer>
+</div>

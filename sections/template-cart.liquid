@@ -1,0 +1,167 @@
+<div class="max-w-7xl mx-auto px-4">
+  <div>
+    {% if cart.item_count > 0 %}
+      <!-- Heading and Continue Shopping Button -->
+      <div class="flex flex-col space-y-3 text-center py-10">
+        <!-- Heading -->
+        <div>
+          <h1 class="text-4xl font-medium uppercase">{{ section.settings.cartTitle }}</h1>
+        </div>
+
+        <!-- Cart Button -->
+        <div>
+          <a href="{{ routes.all_products_collection_url }}">{{ section.settings.continueShoppingBtnText }}</a>
+        </div>
+      </div>
+
+
+      <!-- Cart Form -->
+      <form
+        action="{{ routes.cart_url }}"
+        method="POST"
+        novalidate>
+        <table class="table-auto divide-y divide-gray-200 my-4 w-full">
+          <thead>
+            <th></th>
+            <th>Price</th>
+            <th>Qunatity</th>
+            <th>Total</th>
+          </thead>
+
+          <tbody>
+            {% for item in cart.items %}
+              <tr class="table-row my-10">
+                <td class="flex my-4">
+                  <a href="{{ item.url }}" class="inline-block mr-3">
+                    {% if item.image %}
+                      <img
+                        src="{{ item.image | img_url : 'medium' }}"
+                        alt="{{ item.title | escape }}"
+                        class="w-20 h-20 object-cover">
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-covet border' }}
+                    {% endif %}
+                  </a>
+                  <div>
+                    <p>{{ item.product.title }}</p>
+                    <p class="uppercase">{{ item.variant.title }}</p>
+
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="px-3 py-1 border border-gray-300 my-4 inline-block">Remove</a>
+                  </div>
+                </td>
+                <td>{{ item.price | money }}</td>
+                <td>
+                  <input
+                    type="number"
+                    name="updates[]"
+                    min="0"
+                    value="{{ item. quantity }}"
+                    class="w-[80px] h-[40px] border focus:outline-none px-4"
+                    id="updates_{{ forloop.index }}">
+                </td>
+                <td>
+                  <p>{{ item.line_price | money }}</p>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="flex justify-between items-center space-x-9">
+
+
+          <!-- Order Note -->
+          <div class="w-[40%]">
+            <label for="orderNote" class="w-full block uppercase">Order Note</label>
+            <textarea
+              id="orderNote"
+              class="w-full border foucs:outline-none block h-[80px]"
+              name="note"></textarea>
+          </div>
+
+
+          <!-- Update Cart and Checkout Buttons -->
+          <div>
+            <!-- Total Prices -->
+            <div class="flex justify-between items-center">
+              <p>{{ cart.items_subtotal_price | money }}</p>
+              <p>{{ cart.items_subtotal_price | money }}</p>
+            </div>
+
+
+            <!-- Shipping Taxes -->
+            <div>
+              <p>{{ section.settings.shippingTaxNote }}</p>
+            </div>
+
+            <div class="flex justify-end items-center space-x-5 py-6">
+              <!-- Update Cart Button -->
+              <div>
+                <button
+                  type="submit"
+                  name="update"
+                  class="px-5 bg-white text-gray-900 uppercase py-3 border border-gray-300">Update Cart</button>
+              </div>
+              <!--  Checkout Button -->
+              <div>
+                <button
+                  type="submit"
+                  name="checkout"
+                  class="px-5 uppercase bg-gray-900 text-white font-medium py-3 border border-gray-300">Checkout</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+
+
+    {% else %}
+      <div class="h-[80vh] flex justify-center items-center flex-col">
+        <!-- Cart Empty Heading -->
+        <div>
+          <h1>{{ section.settings.cartEmptyHeading }}</h1>
+        </div>
+
+
+        <!-- Continue Shopping Button -->
+        <div>
+          <a href="{{ routes.all_products_collection_url }}">{{ section.settings.continueShoppingBtnText }}</a>
+        </div>
+      </div>
+    {% endif %}
+
+
+
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Template-Cart",
+    "settings": [
+      {
+        "type": "text",
+        "id": "cartTitle",
+        "default": "Cart",
+        "label": "Cart Page Heading"
+      }, {
+        "type": "text",
+        "id": "continueShoppingBtnText",
+        "default": "Continue Shopping",
+        "label": "Continue Shopping Button"
+      }, {
+        "type": "text",
+        "id": "cartEmptyHeading",
+        "default": "Your Cart Is Empty",
+        "label": "Cart Empty Heading"
+      }, {
+        "type": "text",
+        "id": "shippingTaxNote",
+        "default": "Shipping, taxes, and discounts codes calculated at checkout.",
+        "label": "Shipping Tax Note"
+      }
+    ]
+  }
+{% endschema %}

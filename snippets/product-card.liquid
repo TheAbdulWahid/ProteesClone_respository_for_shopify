@@ -1,0 +1,104 @@
+<style>
+  .quick-view-bar {
+    width: 0;
+    transform: translateY(5px);
+    opacity: 0;
+  }
+
+  .featured-image-div:hover > .quick-view-bar {
+    width: 100%;
+    transform: translateY(0px);
+    opacity: 1;
+    transition: transform ease 0.5s, opacity ease 0.5s;
+  }
+</style>
+<div>
+  <!-- product-Card-->
+  <div id="card_id"
+    class="text-center product-card"
+    x-data="{ quickBar : false }">
+
+
+    <!-- Featured Image -->
+    <div class="relative featured-image-div mb-5" x-data="{ closeWindow : false }">
+
+      <!-- Quick View bar -->
+      <div class="py-2 bg-black text-white absolute bottom-0 left-0 right-0 quick-view-bar" x-on:click="quickBar = true">
+        <p>Quick View</p>
+      </div>
+
+
+
+      <a href="{{ product.url }}">
+        {% if product.featured_image %}
+          <img
+            src="{{ product.featured_image | img_url: 'medium' }}"
+            alt="{{ product.featured_imgae.alt }}"
+            class="w-full object-cover">
+
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-cover' }}
+        {% endif %}
+      </div>
+      <!-- Product Title -->
+      <div>
+        <h1>{{ product.title }}</h1>
+      </div>
+
+      <!-- Product Price -->
+      <div class="flex justify-center space-x-5">
+        {% if product.compare_at_price %}
+          <span class="line-through">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+        <span>{{ product.price | money }}</span>
+      </div>
+    </a>
+
+
+
+    <div
+      class="fixed z-50 top-1/2 left-1/2 w-4/5 overflow-y-auto h-[90vh] p-5 bg-white transforn -translate-x-[50%] -translate-y-[50%]"
+      x-show="quickBar"
+      @click.away="quickBar = false">
+
+      <div class="absolute right-[20px]">
+        <button x-on:click="quickBar = false">
+          {% render 'icon-close' %}
+        </button>
+      </div>
+
+      <div>
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Product Media -->
+          <div class="product--media">
+            {% for media in product.media %}
+              {% render 'product-media', media: media %}
+            {% endfor %}
+          </div>
+
+          <!-- Product Information -->
+          <div class="product--information">
+            <form
+              action="{{ routes.cart_add_url }}"
+              novalidate
+              method="POST"
+              id="product_form_{{ product.id }}">
+              <div class="my-3">
+                <a href="{{ shop.url }}">Home /
+                </a>
+
+                {% for collection in product.collections %}
+                  <a href="{{ collection.url }}">{{ collection.title }}</a>
+                {% endfor %}
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div x-show="quickBar" class="w-full h-screen fixed z-20 bg-black opacity-30 inset-0"></div>
+  </div>
+</div>

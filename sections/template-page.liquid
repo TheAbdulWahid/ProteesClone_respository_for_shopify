@@ -1,0 +1,51 @@
+<style>
+  .content-div ol {
+    list-style: decimal;
+  }
+  .content-div ul {
+    list-style: disc;
+  }
+</style>
+
+<div class="max-w-5xl mx-auto px-4 my-10">
+  <!-- Links -->
+  <div class="text-center">
+    <a href="/home" class="inline-block">{{ section.settings.home_link }}</a>
+
+    <span>
+      / {{ page.title }}</span>
+  </div>
+  <!-- Title -->
+  <div class="mt-4 mb-10">
+    <h1 class="text-4xl font-medium text-center">{{ page.title }}</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="leading-6">
+    {% if section.settings.starting_heading %}
+      <h2 class="my-5 text-4xl font-bold uppercase">{{ section.settings.starting_heading }}</h2>
+    {% endif %}
+    <div class="content-div">
+      {{ page.content }}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "home_link",
+        "default": "Home",
+        "label": "Home Link"
+      }, {
+        "type": "text",
+        "id": "starting_heading",
+        "label": "Starting Heading"
+      }
+    ]
+  }
+{% endschema %}

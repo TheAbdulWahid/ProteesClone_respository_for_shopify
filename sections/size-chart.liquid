@@ -1,0 +1,141 @@
+<div class="max-w-5xl mx-auto px-4 my-10">
+  {% if section.settings.full_sleeve_size_charts_image %}
+    <!-- Full Sleeve T-Shirt -->
+    <div>
+      <img src="{{ section.settings.full_sleeve_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.image_alt }}">
+    </div>
+  {% endif %}
+
+  {% if section.settings.half_sleeve_size_charts_image %}
+    <!-- Half Sleeve T-Shirt -->
+    <div>
+      <img src="{{ section.settings.half_sleeve_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.half_sleeve_size_charts_image_alt }}">
+
+    </div>
+  {% endif %}
+
+
+  {% if section.settings.overSized_size_charts_image %}
+    <!-- OverSized T-Shirt -->
+    <div>
+      <img src="{{ section.settings.overSized_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.overSized_size_charts_image_alt }}">
+    </div>
+  {% endif %}
+
+  {% if section.settings.trousers_size_charts_image %}
+    <!-- Trousers Size  -->
+    <div>
+
+      <img src="{{ section.settings.trousers_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.trousers_size_charts_image_alt }}">
+    </div>
+  {% endif %}
+
+
+  {% if section.settings.puffer_size_charts_image %}
+    <!-- Puffer Size -->
+    <div>
+      <img src="{{ section.settings.puffer_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.puffer_size_charts_image_alt }}">
+    </div>
+  {% endif %}
+
+
+  {% if section.settings.hoodies_size_charts_image %}
+    <!-- Hoodies Size -->
+    <div>
+      <img src="{{ section.settings.hoodies_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.hoodies_size_charts_image_alt }}">
+    </div>
+  {% endif %}
+
+  <!-- Junior Chart -->
+  <div>
+    {% if section.settings.junior_size_heading != blank %}
+      <!-- Heading -->
+      <div class="my-6">
+        <h2 class="text-6xl font-medium uppercase">{{ section.settings.junior_size_heading }}</h2>
+      </div>
+    {% endif %}
+
+    {% if section.settings.junior_size_charts_image %}
+      <!-- Size Chart -->
+      <div>
+        <img src="{{ section.settings.junior_size_charts_image | img_url: 'large' }}" alt="{{ section.settings.junior_size_charts_image_alt }}">
+      </div>
+    {% endif %}
+  </div>
+
+
+</div>
+
+
+
+{% schema %}
+  {
+    "name": "Size Chart",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "full_sleeve_size_charts_image",
+        "label": "Full Sleeve T-Shirt Image"
+      },
+      {
+        "type": "text",
+        "id": "image_alt",
+        "label": "Full Sleeve T-Shirt Image Alternate"
+      },
+      {
+        "type": "image_picker",
+        "id": "half_sleeve_size_charts_image",
+        "label": "Half Sleeve T-Shirt Image"
+      },
+      {
+        "type": "text",
+        "id": "half_sleeve_size_charts_image_alt",
+        "label": "Half Sleeve T-Shirt Image Alternate"
+      }, {
+        "type": "image_picker",
+        "id": "overSized_size_charts_image",
+        "label": "OverSized T-Shirt Image"
+      }, {
+        "type": "text",
+        "id": "overSized_size_charts_image_alt",
+        "label": "OverSized T-Shirt Image Alternate"
+      }, {
+        "type": "image_picker",
+        "id": "trousers_size_charts_image",
+        "label": "Trousers Size Image"
+      }, {
+        "type": "text",
+        "id": "trousers_size_charts_image_alt",
+        "label": "Trousers Size Image Alternate"
+      }, {
+        "type": "image_picker",
+        "id": "puffer_size_charts_image",
+        "label": "Puffer Size Image"
+      }, {
+        "type": "text",
+        "id": "puffer_size_charts_image_alt",
+        "label": "Puffer Size Image Alternate"
+      }, {
+        "type": "image_picker",
+        "id": "hoodies_size_charts_image",
+        "label": "Hoodies Size Image"
+      }, {
+        "type": "text",
+        "id": "hoodies_size_charts_image_alt",
+        "label": "Hoodies Size Image Alternate"
+      }, {
+        "type": "text",
+        "id": "junior_size_heading",
+        "label": "Junior Chart Heading"
+      }, {
+        "type": "image_picker",
+        "id": "junior_size_charts_image",
+        "label": "Junior Chart Image"
+      }, {
+        "type": "text",
+        "id": "junior_size_charts_image_alt",
+        "label": "Junior Chart Image Alternate"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,11 @@
+{
+    "sections": {
+        "template": {
+            "type": "template-page"
+        },
+        "size-chart": {
+            "type": "size-chart"
+        }
+    },
+    "order": ["template","size-chart"]
+}

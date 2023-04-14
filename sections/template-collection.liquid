@@ -1,0 +1,85 @@
+<div class="max-w-7xl mx-auto px-3">
+
+
+  {% paginate collection.products by section.settings.product_per_page %}
+
+    <!-- Collection title and Front Page text -->
+    <div class="text-center py-10">
+      <!-- FrontPage Link -->
+      <div>
+        <a href="{{ routes.shop_url }}">
+          {{ section.settings.front_page_text }}
+        </a>
+      </div>
+      <!-- Collection Title -->
+      <div>
+        <h1 class="text-5xl">{{ collection.title }}</h1>
+      </div>
+    </div>
+
+    <!-- Product Count and sort Filter -->
+    <div class="flex justify-between items-center">
+      <!-- Product Count -->
+      <div>
+        <p>{{ collection.all_products_count }} products</p>
+      </div>
+
+      <!-- Filter -->
+      <div>
+        <select class="w-[300px] py-4 px-2 border">
+          <option value="Name">Name</option>
+          <option value="Size">Size</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div class="grid grid-cols-4 gap-8">
+      {% for product in collection.products %}
+
+        {% render 'product-card', product: product %}
+
+
+
+      {% else %}
+        <p>No matches</p>
+
+      {% endfor %}
+    </div>
+
+    {% render 'pagination', pagination: paginate %}
+  {% endpaginate %}
+</div>
+
+<script>
+  let card_div = document.querySelectorAll("#card_id");
+  card_div.forEach(e => {
+    e.addEventListener("click", function() {
+      console.log(e);
+    })
+  })
+</script>
+
+{% schema %}
+  {
+    "name": "Collection Page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "front_page_text",
+        "label": "Front Page Text",
+        "default": "Home"
+      }, {
+        "type": "range",
+        "id": "product_per_page",
+        "default": 32,
+        "label": "Product Per Page Slider",
+        "step": 1,
+        "min": 4,
+        "max": 32
+
+      }
+    ]
+  }
+{% endschema %}

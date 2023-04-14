@@ -1,0 +1,41 @@
+<style>
+  .product--information {
+    height: fit-content;
+  }
+
+  .unavailable-variant {
+    position: relative;
+  }
+
+  .unavailable-variant::before {
+    content: '';
+    width: 1px;
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.766);
+    top: 0;
+    left: 50%;
+    transform: rotate(-20deg);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+  }
+</style>
+
+<div class="max-w-7xl mx-auto px-4">
+  <div class="product-grid gap-5">
+    <!-- Product Media -->
+    <div class="product--media">
+      {% for media in product.media %}
+        {% render 'product-media', media: media %}
+      {% endfor %}
+    </div>
+
+
+    <!-- Product Information -->
+    <div class="product--information mb-20 sticky top-5">
+      {% render 'product-information' %}
+    </div>
+  </div>
+</div>

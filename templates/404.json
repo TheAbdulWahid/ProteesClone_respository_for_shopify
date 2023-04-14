@@ -1,0 +1,22 @@
+{
+    "name": "404",
+    "sections": {
+        "template": {
+            "type": "template-404",
+
+            "blocks": {
+                "404-heading": {
+                    "type": "heading"
+                },
+                "heading-subText": {
+                    "type": "subText"
+                },
+                "continue-shopping-btn": {
+                    "type": "btnText"
+                }
+            },
+            "block_order": ["404-heading","heading-subText","continue-shopping-btn"]
+        }
+    },
+    "order": ["template"]
+}

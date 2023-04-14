@@ -1,0 +1,104 @@
+<style>
+  .shopingBtn {
+    position: relative;
+    display: inline-block;
+  }
+
+  .shopingBtn::before,
+  .shopingBtn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    display: block;
+    left: 0;
+    bottom: 0;
+    border-radius: 5px;
+  }
+
+  .shopingBtn::before {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .shopingBtn::after {
+    width: 0;
+    background-color: black;
+  }
+
+  .shopingBtn:hover::after {
+    width: 100%;
+    transition: width ease 0.6s;
+  }
+</style>
+
+<!-- Container -->
+<div class="max-w-7xl mx-auto px-2">
+  <div class="py-[200px] text-center flex flex-col justify-center">
+
+    {% for block in section.blocks %}
+
+      {% case block.type %}
+        {% when 'heading' %}
+        <!-- Page Heading -->
+        <div class="my-1">
+          <h1 class="text-5xl uppercase font-bold">{{ section.settings.heading }}</h1>
+        </div>
+
+        {% when 'subText' %}
+        <!-- Subtext -->
+        <div class="my-1">
+          <p class="text-base">{{ section.settings.subText }}</p>
+        </div>
+
+        {% when 'btnText' %}
+        <div class="my-1 flex justify-center">
+          <a href="{{ routes.collections_url }}" class="text-black py-1 text-center shopingBtn">{{ section.settings.btnText }}</a>
+        </div>
+      {% endcase %}
+    {% endfor %}
+
+
+
+    <!-- Continue Shopping Button -->
+
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "template-404",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "404 Page not found",
+        "label": "Page main heading"
+      }, {
+        "type": "text",
+        "id": "subText",
+        "default": "The page you were looking for does not exist.",
+        "label": "Heading Subtext"
+      }, {
+        "type": "text",
+        "id": "btnText",
+        "default": "Continue Shopping",
+        "label": "Continue Shopping Button"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "404-heading",
+        "limit": 1
+      }, {
+        "type": "subText",
+        "name": "Heading Subtext",
+        "limit": 1
+      }, {
+        "type": "btnText",
+        "name": "Button text",
+        "limit": 1
+      }
+    ]
+  }
+{% endschema %}

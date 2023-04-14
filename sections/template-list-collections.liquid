@@ -1,0 +1,63 @@
+<div class="max-w-7xl mx-auto px-4">
+  <div class="my-10">
+    <!-- Heading -->
+    <div class="my-8">
+      <h1 class="text-5xl text-center">{{ section.settings.list_collection_heading }}</h1>
+    </div>
+    <div class="grid grid-cols-4 gap-8">
+      {% for collection in collections %}
+        {% if collection.all_products_count > 0 %}
+          <!-- Card -->
+          <div class="overflow-hidden relative">
+
+            <!-- Image -->
+            <a href="{{ collection.url }}">
+              <div>
+                {% if collection.featured_image != blank %}
+                  {% assign featured_image = collection.featured_image %}
+
+                {% else %}
+                  {% assign featured_image = collection.products.first.image %}
+                {% endif %}
+
+                <img
+                  src="{{ featured_image | img_url: 'medium' }}"
+                  alt="{{ featured_image.title | escape }}"
+                  class="bg-gray-300 w-full transform transition-all ease duration-1000 hover:bg-gray-400 hover:scale-105 collection-image">
+
+
+              </div>
+              <!-- Title -->
+              <div class="absolute bg-white text-black py-1 px-4 top-1/2 left-1/2 transform -translate-x-[50%] -translate-y-[50%] pointer-events-none">
+                <span class="text-center uppercase block">{{ collection.title }}</span>
+              </div>
+
+            </a>
+          </div>
+
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+
+</div>
+
+{% schema %}
+  {
+    "name": "List Collection",
+    "settings": [
+      {
+        "type": "text",
+        "id": "list_collection_heading",
+        "default": "Collection List",
+        "label": "List Collection Heading"
+      }
+    ],
+    "presets": [
+      {
+        "name": "List Collection"
+      }
+    ]
+  }
+{% endschema %}
