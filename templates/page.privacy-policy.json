@@ -1,0 +1,9 @@
+{
+    "name": "Privacy Policy",
+    "sections": {
+        "template": {
+            "type": "template-page"
+        }
+    },
+    "order": ["template"]
+}

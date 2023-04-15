@@ -22,7 +22,7 @@
     grid-template-columns: 2fr 1fr;
   }
 </style>
-
+<!-- Container -->
 <div class="max-w-7xl mx-auto px-4">
   <div class="product-grid gap-5">
     <!-- Product Media -->
@@ -35,7 +35,281 @@
 
     <!-- Product Information -->
     <div class="product--information mb-20 sticky top-5">
-      {% render 'product-information' %}
+      {% form 'product', product %}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}">
+        <div class="my-3">
+          <a href="{{ shop.url }}">Home /
+          </a>
+          {% for collection in product.collections %}
+            <a href="{{ collection.url }}">{{ collection.title }}</a>
+          {% endfor %}
+        </div>
+
+        <!-- Name -->
+        <div class="my-3">
+          <h1 class="text-4xl">{{ product.title }}</h1>
+        </div>
+
+        <!-- Price -->
+        <div class="my-3 flex items-center space-x-3" id="price">
+          {% assign product_price = product.selected_or_first_available_variant %}
+
+          <p class="text-xl line-through" id="compare_at_price">{{ product_price.compare_at_price | money }}</p>
+
+          <p class="text-xl" id="original_price">{{ product_price.price | money }}</p>
+
+          {% if product_price.compared_at_price %}
+            <span>Save
+            </span>
+
+          {% endif %}
+        </div>
+
+        <script>
+          let compare_at_price_var = document.getElementById("compare_at_price");
+          let original_price_var = document.getElementById("original_price");
+          let original_price_innerText = original_price_var.innerText;
+          let price = document.getElementById("price");
+
+
+          {% assign product_price = product.selected_or_first_available_variant %}
+
+          if ({{product_price.compare_at_price}}) {
+            function Orginal_innerText(getPrice) {
+              let original_price = getPrice.innerText;
+              let replacedVal1 = original_price.replace("Rs.", "");
+              let replacedVal2 = replacedVal1.replace(".00", "")
+              let finalReplacedVal = replacedVal2.replace(",", "")
+
+              return finalReplacedVal;
+            }
+
+
+
+            let extractedComparePrice = parseInt(Orginal_innerText(compare_at_price_var));
+            let extractedOriginalPrice = parseInt(Orginal_innerText(original_price_var));
+
+            function getPercentage() {
+              let percentage = (extractedComparePrice - extractedOriginalPrice) / (extractedComparePrice) * 100;
+              return percentage;
+            }
+
+            let savePercentage = getPercentage();
+
+            const div = document.createElement("div");
+            const p = document.createElement("p");
+            price.appendChild(div);
+            div.appendChild(p);
+            p.setAttribute("class", "text-base text-red-400");
+            let d = "Save " + parseInt(savePercentage) + "%";
+
+            p.innerText = d;
+          }
+        </script>
+
+        <hr>
+
+        <!-- Options -->
+        <div class="mt-10 mb-5">
+          {% unless product.has_only_default_variant %}
+            <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+              {% for option in product.options_with_values %}
+                <label class="my-4 block" for="option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+
+                <!-- Variants -->
+                <div class="grid grid-cols-4 gap-3">
+                  {% for value in option.values %}
+                    {% if option.selected_value == value %}
+                      <label class="border border-black py-2 px-4 uppercase text-center text-sm relative" for="variant_{{ product.id }}_{{ forloop.index0 }}">{{ value }}</label>
+
+
+                    {% else %}
+                      <label class="border py-2 px-4 uppercase text-center text-sm">{{ value }}</label>
+
+
+
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+
+
+
+            </div>
+          {% endunless %}
+        </div>
+
+        <!-- Quantity -->
+        <div>
+          <label class="my-3 block" for="Quantity-{{ section.id }}">Qunatity</label>
+
+
+          <div class="inline-flex items-center border px-3 py-4">
+            <span data-decrease-quantity>-</span>
+
+            <input
+              type="text"
+              name="quantity"
+              min="1"
+              id="Qunatity_{{ product.id }}"
+              value="1"
+              class="pointer-events-none w-[80px] text-center"
+              data-qunatity-value>
+
+            <span data-increase-quantity>+</span>
+          </div>
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="flex flex-col my-7 space-y-3">
+
+          {% if product.selected_or_first_available_variant.available %}
+            <!-- Add to cart -->
+            <div>
+              <button name="add" class="py-3 text-center text-black bg-white border border-black font-medium text-lg uppercase w-full">
+                <span class="text-sm font-medium">Add to cart</span>
+              </button>
+            </div>
+
+            <!-- Checkout Button -->
+            <div>
+              <button name="checkout" class="py-3 text-center text-white bg-black border border-black font-medium text-lg uppercase w-full">
+                <span class="text-sm font-medium">Buy it now</span>
+              </button>
+            </div>
+
+          {% else %}
+            <!-- Sold Out Button -->
+            <div>
+              <button
+                name="add"
+                class="py-3 text-center text-gray-500 bg-gray-100 border border-black font-medium text-lg uppercase w-full"
+                disabled>
+                <span>Sold Out</span>
+              </button>
+            </div>
+          {% endif %}
+
+        </div>
+
+        <!-- Description -->
+        <div>
+          <p>{{ product.description }}</p>
+        </div>
+      {% endform %}
+
+
+      <!-- Size Chart And Review -->
+      <div class="my-10" x-data="{ showChart : false }">
+        <!-- Size Chart -->
+        <div class="relative cursor-pointer border py-3 px-2" x-on:click="showChart = !showChart">
+          <!-- Heading and dropDown icon -->
+          <div>
+            <!-- Heading -->
+            <div class="text-center">
+              <h3>Size Chart</h3>
+            </div>
+
+            <!-- Icon -->
+            <div class="absolute right-[10px] top-[15px]">
+              {% render 'icon-dropdown' %}
+            </div>
+          </div>
+
+          <!-- Size Chart Section -->
+          <div x-show="showChart" class="my-5">
+            {% for block in section.blocks %}
+
+              {% if block.type == 'size_chart_name' %}
+                {% if block.settings.size_name %}
+                  <div class="my-5">
+                    <h2 class="text-5xl font-medium">{{ block.settings.size_name }}</h2>
+                  </div>
+                {% endif %}
+              {% endif %}
+
+
+              {% if block.type == 'size_chart_image' %}
+                {% if block.settings.product_size %}
+                  <div>
+                    <img src="{{ block.settings.product_size | img_url: 'master' }}" alt="Size Image">
+                  </div>
+                {% endif %}
+              {% endif %}
+
+
+
+            {% endfor %}
+          </div>
+        </div>
+
+
+        <!-- Review -->
+        <div class="relative">
+          <!-- Heading and dropDown icon -->
+          <div class="border py-3 cursor-pointer">
+            <!-- Heading -->
+            <div class="text-center">
+              <h3>Review</h3>
+            </div>
+
+            <!-- Icon -->
+            <div class="absolute right-[10px] top-[15px]">
+              {% render 'icon-dropdown' %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <script>
+        let decrease_quantity = document.querySelector("span[data-decrease-quantity]");
+        let increase_quantity = document.querySelector("span[data-increase-quantity]");
+        let quantity_value = document.querySelector("input[data-qunatity-value]")
+
+        decrease_quantity.addEventListener('click', () => {
+          if (quantity_value.value > 1) {
+            quantity_value.value --;
+          }
+        })
+
+        increase_quantity.addEventListener('click', () => {
+          quantity_value.value ++;
+        })
+      </script>
     </div>
   </div>
 </div>
+
+{% schema %}
+  {
+    "name": "Template Product",
+    "blocks": [
+      {
+        "type": "size_chart_name",
+        "name": "Size Chart Name",
+        "settings": [
+          {
+            "type": "text",
+            "id": "size_name",
+            "label": "Product Size Heading"
+          }
+        ]
+      }, {
+        "type": "size_chart_image",
+        "name": "Size Chart Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "product_size",
+            "label": "Product Size"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
