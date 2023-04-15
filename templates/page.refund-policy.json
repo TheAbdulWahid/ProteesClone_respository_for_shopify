@@ -1,0 +1,9 @@
+{
+    "name": "Refund Policy",
+    "sections": {
+        "template": {
+            "type": "template-page"
+        }
+    },
+    "order": ["template"]
+}
