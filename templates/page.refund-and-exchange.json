@@ -1,0 +1,9 @@
+{
+    "name": "Refund and exchange",
+    "sections": {
+        "template": {
+            "type": "template-page"
+        }
+    },
+    "order": ["template"]
+}
