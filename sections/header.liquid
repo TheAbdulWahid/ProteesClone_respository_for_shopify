@@ -70,7 +70,7 @@
                       <div class="grid grid-cols-2 gap-5 text-left">
                         {% for childlink in link.links %}
                           <div>
-                            <a href="#">{{ childlink.title }}</a>
+                            <a href="{{ childlink.url }}">{{ childlink.title }}</a>
                           </div>
                         {% endfor %}
                       </div>

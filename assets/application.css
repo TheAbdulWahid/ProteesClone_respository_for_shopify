@@ -823,6 +823,10 @@ video {
   width: 10px;
 }
 
+.w-\[1px\] {
+  width: 1px;
+}
+
 .w-\[300px\] {
   width: 300px;
 }
@@ -835,6 +839,10 @@ video {
   width: 450px;
 }
 
+.w-\[480px\] {
+  width: 480px;
+}
+
 .w-\[80px\] {
   width: 80px;
 }
@@ -845,14 +853,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[480px\] {
-  width: 480px;
-}
-
-.w-\[480\] {
-  width: 480;
 }
 
 .min-w-\[50px\] {

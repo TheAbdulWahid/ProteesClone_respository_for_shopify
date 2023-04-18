@@ -35,7 +35,7 @@
 
     <!-- Product Information -->
     <div class="product--information mb-20 sticky top-5">
-      {% form 'product', product %}
+      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
         <input
           type="hidden"
           name="id"
@@ -115,23 +115,69 @@
         <!-- Options -->
         <div class="mt-10 mb-5">
           {% unless product.has_only_default_variant %}
-            <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+            <div>
               {% for option in product.options_with_values %}
+
                 <label class="my-4 block" for="option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
 
                 <!-- Variants -->
                 <div class="grid grid-cols-4 gap-3">
                   {% for value in option.values %}
+
+                    <!-- Selected -->
                     {% if option.selected_value == value %}
-                      <label class="border border-black py-2 px-4 uppercase text-center text-sm relative" for="variant_{{ product.id }}_{{ forloop.index0 }}">{{ value }}</label>
+                      <div>
+                        <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
+                          <input
+                            type="radio"
+                            id="productSelect-{{ product.id }}-option-size-{{ value }}"
+                            value="{{ value }}"
+                            name="size"
+                            class="h-[1px] w-[1px] absolute"
+                            data-variant
+                            checked="checked">
+
+                          <script type="application/json">
+                            {{ product.variants | json }}
+                          </script>
+                        </variant-selector>
+
+
+
+                        <label class="border border-black py-2 px-4 uppercase text-center text-sm relative block" for="productSelect-{{ product.id }}-option-size-{{ value }}">{{ value }}</label>
+
+                      </div>
+
 
 
                     {% else %}
-                      <label class="border py-2 px-4 uppercase text-center text-sm">{{ value }}</label>
+                      <!-- Rest Options -->
+                      <div>
+                        <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
+                          <input
+                            type="radio"
+                            id="productSelect-{{ product.id }}-option-size-{{ value }}"
+                            value="{{ value }}"
+                            name="size"
+                            class="h-[1px] w-[1px] absolute"
+                            data-variant>
 
+                          <script type="application/json">
+                            {{ product.variants | json }}
+                          </script>
+                        </variant-selector>
 
+                        <label
+                          class="border py-2 px-4 uppercase text-center text-sm relative block"
+                          for="productSelect-{{ product.id }}-option-size-{{ value }}"
+                          value="{{ value }}">{{ value }}</label>
+
+                      </div>
 
                     {% endif %}
+
+
+
                   {% endfor %}
                 </div>
               {% endfor %}
@@ -264,6 +310,73 @@
           </div>
         </div>
       </div>
+
+      <script>
+
+        class VariantSelector extends HTMLElement {
+          constructor() {
+            super();
+
+            this.addEventListener('click', this.onVariantChange);
+          }
+
+          onVariantChange() {
+            this.getSelectedOption()
+            this.getSelectedVariant();
+
+            if (this.currentVariant) {
+              this.updateURL();
+              this.updateFormId();
+            }
+          }
+
+          getSelectedOption() {
+            this.input = Array.from(this.querySelectorAll('input[data-variant]'), (input) => input.value);
+            console.log(this.input);
+            return this.input;
+          }
+
+          getVariantJSON() {
+            this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
+            return this.variantData;
+          }
+
+          getSelectedVariant() {
+            this.currentVariant = this.getVariantJSON().find((variant) => {
+              const findings = !variant.options.map((option, index) => {
+                return this.input[index] === option;
+              }).includes(false);
+
+              if (findings) {
+                return variant;
+              }
+            });
+            console.log(this.currentVariant);
+          }
+
+
+          updateURL() {
+            if (!this.currentVariant) {
+              return;
+            }
+
+            window.history.replaceState({}, '', `${
+              this.dataset.url
+            }?variant=${
+              this.currentVariant.id
+            }`);
+          }
+
+          updateFormId() {
+            const formId = document.querySelector('#product-form').querySelector('input[name="id"]');
+            formId.value = this.currentVariant.id;
+
+          }
+        }
+
+        customElements.define("variant-selector", VariantSelector)
+      </script>
+
 
 
       <script>

@@ -1,9 +1,12 @@
 {
-    "name": "Refund and exchange",
-    "sections": {
-        "template": {
-            "type": "template-page"
-        }
-    },
-    "order": ["template"]
+  "sections": {
+    "template": {
+      "type": "template-page",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "template"
+  ]
 }
