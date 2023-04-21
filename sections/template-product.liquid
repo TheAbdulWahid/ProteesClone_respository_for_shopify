@@ -121,7 +121,10 @@
                 <label class="my-4 block" for="option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
 
                 <!-- Variants -->
-                <div class="grid grid-cols-4 gap-3">
+                <div
+                  class="grid grid-cols-4 gap-3"
+                  data-section="{{ section.id }}"
+                  id="variant_div_{{ section.id }}">
                   {% for value in option.values %}
 
                     <!-- Selected -->
@@ -211,7 +214,7 @@
 
 
         <!-- Buttons -->
-        <div class="flex flex-col my-7 space-y-3">
+        <div class="flex flex-col my-7 space-y-3" id="inter_btn_{{ section.id }}">
 
           {% if product.selected_or_first_available_variant.available %}
             <!-- Add to cart -->
@@ -318,7 +321,7 @@
             super();
 
             this.addEventListener('click', this.onVariantChange);
-          }
+          };
 
           onVariantChange() {
             this.getSelectedOption()
@@ -327,19 +330,20 @@
             if (this.currentVariant) {
               this.updateURL();
               this.updateFormId();
-            }
-          }
+              this.updatePrice();
+            };
+          };
 
           getSelectedOption() {
             this.input = Array.from(this.querySelectorAll('input[data-variant]'), (input) => input.value);
             console.log(this.input);
             return this.input;
-          }
+          };
 
           getVariantJSON() {
             this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
             return this.variantData;
-          }
+          };
 
           getSelectedVariant() {
             this.currentVariant = this.getVariantJSON().find((variant) => {
@@ -352,27 +356,67 @@
               }
             });
             console.log(this.currentVariant);
-          }
+          };
 
 
           updateURL() {
             if (!this.currentVariant) {
               return;
-            }
+            };
 
             window.history.replaceState({}, '', `${
               this.dataset.url
             }?variant=${
               this.currentVariant.id
             }`);
-          }
+          };
 
           updateFormId() {
             const formId = document.querySelector('#product-form').querySelector('input[name="id"]');
             formId.value = this.currentVariant.id;
 
-          }
-        }
+          };
+
+          updatePrice() {
+            fetch(`${
+              this.dataset.url
+            }?variant=${
+              this.currentVariant.id
+            }&section_id=${
+              this.dataset.section
+            }`).then(Response => Response.text()).then(responseText => {
+              const variant_id = `variant_div_${
+                this.dataset.section
+              }`;
+
+              const inter_btn = `inter_btn_${
+                this.dataset.section
+              }`;
+
+
+
+              const html = new DOMParser().parseFromString(responseText, 'text/html');
+
+              const oldHTML = document.getElementById(variant_id);
+
+              const newHTML = html.getElementById(variant_id);
+
+              if (oldHTML && newHTML) {
+                oldHTML.innerHTML = newHTML.innerHTML;
+              };
+
+              const oldBtns = document.getElementById(inter_btn);
+
+              const newBtns = html.getElementById(inter_btn);
+
+              if (oldBtns && newBtns) {
+                oldBtns.innerHTML = newBtns.innerHTML;
+              }
+
+
+            })
+          };
+        };
 
         customElements.define("variant-selector", VariantSelector)
       </script>
