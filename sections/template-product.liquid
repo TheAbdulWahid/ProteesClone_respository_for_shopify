@@ -21,6 +21,16 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
   }
+
+  .variant-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+  }
+
+  .black-border{
+    border: 2px solid black;
+  }
 </style>
 <!-- Container -->
 <div class="max-w-7xl mx-auto px-4">
@@ -121,20 +131,16 @@
                 <label class="my-4 block" for="option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
 
                 <!-- Variants -->
-                <div
-                  class="grid grid-cols-4 gap-3"
-                  data-section="{{ section.id }}"
-                  id="variant_div_{{ section.id }}">
-                  {% for value in option.values %}
-
-                    <!-- Selected -->
-                    {% if option.selected_value == value %}
-                      <div>
+                <div class="variant-grid" data-section="{{ section.id }}"id="variant_div_{{ section.id }}">
+                  {% for variant in product.variants %}
+                    {% if variant.available %}
+                      <!-- Available -->
+                      <div class="bg-blue-30">
                         <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
                           <input
                             type="radio"
-                            id="productSelect-{{ product.id }}-option-size-{{ value }}"
-                            value="{{ value }}"
+                            id="productSelect-{{ product.id }}-option-size-{{ variant.title }}"
+                            value="{{ variant.title }}"
                             name="size"
                             class="h-[1px] w-[1px] absolute"
                             data-variant
@@ -145,22 +151,24 @@
                           </script>
                         </variant-selector>
 
-
-
-                        <label class="border border-black py-2 px-4 uppercase text-center text-sm relative block" for="productSelect-{{ product.id }}-option-size-{{ value }}">{{ value }}</label>
+                        {% if variant.selected %}
+                          <label class="border-black border-[2px] py-2 px-4 uppercase text-center text-sm relative block" for="productSelect-{{ product.id }}-option-size-{{ variant.title }}" data-option>{{ variant.title }}</label>
+                        {% else %}
+                          
+                          <label class="border-gray-200 border-[2px] py-2 px-4 uppercase text-center text-sm relative block" for="productSelect-{{ product.id }}-option-size-{{ variant.title }}" data-option>{{ variant.title }}</label>
+                        {% endif %}
 
                       </div>
 
-
-
                     {% else %}
-                      <!-- Rest Options -->
+
+                      <!-- Unavailable -->
                       <div>
                         <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
                           <input
                             type="radio"
-                            id="productSelect-{{ product.id }}-option-size-{{ value }}"
-                            value="{{ value }}"
+                            id="productSelect-{{ product.id }}-option-size-{{ variant.title }}"
+                            value="{{ variant.title }}"
                             name="size"
                             class="h-[1px] w-[1px] absolute"
                             data-variant>
@@ -169,30 +177,23 @@
                             {{ product.variants | json }}
                           </script>
                         </variant-selector>
-
                         <label
-                          class="border py-2 px-4 uppercase text-center text-sm relative block"
-                          for="productSelect-{{ product.id }}-option-size-{{ value }}"
-                          value="{{ value }}">{{ value }}</label>
-
-                      </div>
-
-                    {% endif %}
+                        class="border-[2px] border-gray-200 text-gray-200 py-2 px-4 uppercase text-center text-sm relative block"
+                        for="productSelect-{{ product.id }}-option-size-{{ variant.title }}"
+                        value="{{ variant.title }}" data-option>{{ variant.title }}</label>
 
 
-
-                  {% endfor %}
                 </div>
+
+                  {% endif %}
+                {% endfor %}
               {% endfor %}
-
-
-
             </div>
           {% endunless %}
         </div>
 
         <!-- Quantity -->
-        <div>
+        <div id="count">
           <label class="my-3 block" for="Quantity-{{ section.id }}">Qunatity</label>
 
 

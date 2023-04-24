@@ -66,7 +66,7 @@
                     {{ link.title }}
 
                     <!-- Sublinks -->
-                    <div class="py-8 child fixed w-2/4 bg-red-900 text-white px-6 top-[200px] z-[100]" x-show="{{ link_handle }}">
+                    <div class="py-8 child fixed w-2/4 bg-white text-white px-6 top-[200px] z-[100]" x-show="{{ link_handle }}">
                       <div class="grid grid-cols-2 gap-5 text-left">
                         {% for childlink in link.links %}
                           <div>
@@ -203,10 +203,14 @@
                         <!-- Quantity -->
                         <div data-quantityDiv="{{ forloop.index }}" class="max-w-[100px] min-w-[50px] border flex justify-between space-x-5 px-4 items-center text-center h-[50px] my-3">
                           <!-- Minus -->
-                          <input value="-"
-                            id="minus"
-                            class="focus:outline-none w-[10px] text-center"
-                            data-minus="{{ forloop.index }}">
+                          <qunatity data-url="{{ shop.url }}">
+                            <input
+                              value="-"
+                              id="minus"
+                              class="focus:outline-none w-[10px] text-center"
+                              data-minus="{{ forloop.index }}">
+                          </qunatity>
+
 
                           <!-- Number -->
                           <input type="text"
@@ -217,15 +221,18 @@
                             data-quantity="{{ forloop.index }}">
 
                           <!-- Plus -->
-                          <input
-                            value="+"
-                            id="plus"
-                            class="focus:outline-none w-[10px] text-center"
-                            data-plus="{{ forloop.index }}">
+                          <quantity data-url="{{ shop.url }}">
+                            <input
+                              value="+"
+                              id="plus"
+                              class="focus:outline-none w-[10px] text-center"
+                              data-plus="{{ forloop.index }}">
+                          </quantity>
+
                         </div>
                         <!-- Price -->
                         <div>
-                          <p>{{ item.line_price | money }}</p>
+                          <p>{{ item.price | money }}</p>
                         </div>
                       </div>
 
@@ -291,6 +298,23 @@
 
 
 </div>
+
+<script>
+  class QuantityUpdater extends HTMLElement {
+    constructor() {
+      super();
+
+      this.addEventListener('click', this.updateQuantity)
+    }
+
+    updateQuantity() {
+      const xhr = new XMLHttpRequest();
+
+    }
+  }
+
+  customElements.define('quantity', QuantityUpdater)
+</script>
 
 
 <script>
