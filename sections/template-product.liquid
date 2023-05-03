@@ -31,6 +31,15 @@
   .black-border{
     border: 2px solid black;
   }
+
+  .lazy--loading{
+    opacity: 0;
+    transition: opacity ease-in .5s;
+  }
+
+  .lazy--loading.show{
+    opacity: 1;
+  }
 </style>
 <!-- Container -->
 <div class="max-w-7xl mx-auto px-4">
@@ -379,22 +388,12 @@
           };
 
           updatePrice() {
-            fetch(`${
-              this.dataset.url
-            }?variant=${
-              this.currentVariant.id
-            }&section_id=${
-              this.dataset.section
-            }`).then(Response => Response.text()).then(responseText => {
-              const variant_id = `variant_div_${
-                this.dataset.section
-              }`;
+            fetch(`${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${this.dataset.section}`)
+            .then(Response => Response.text())
+            .then(responseText => {
+              const variant_id = `variant_div_${this.dataset.section}`;
 
-              const inter_btn = `inter_btn_${
-                this.dataset.section
-              }`;
-
-
+              const inter_btn = `inter_btn_${this.dataset.section}`;
 
               const html = new DOMParser().parseFromString(responseText, 'text/html');
 
@@ -413,8 +412,6 @@
               if (oldBtns && newBtns) {
                 oldBtns.innerHTML = newBtns.innerHTML;
               }
-
-
             })
           };
         };
@@ -438,6 +435,25 @@
         increase_quantity.addEventListener('click', () => {
           quantity_value.value ++;
         })
+      </script>
+
+      <script>
+        let observeImage = document.querySelectorAll('.lazy--loading');
+
+        let observer = new IntersectionObserver( entries => {
+            entries.forEach( entry => {
+              entry.target.classList.add("show", entry.isIntersecting);
+              if(entry.isIntersecting) observer.unobserve(entry.target)
+            })
+        }, {
+          threshold: 0,
+          root: null,
+        });
+
+        observeImage.forEach( image => {
+          observer.observe(image);
+        })
+
       </script>
     </div>
   </div>

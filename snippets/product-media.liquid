@@ -3,7 +3,7 @@
   <img
     src="{{ media | img_url: 'large' }}"
     alt="{{ media.preview_image.alt }}"
-    class="w-full object-cover"
+    class="w-full object-cover lazy--loading"
     loading="lazy">
 {% else %}
 
