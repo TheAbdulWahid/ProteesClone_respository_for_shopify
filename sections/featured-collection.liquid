@@ -37,7 +37,7 @@
 
     {% for product in section.settings.featured_collection.products limit: section.settings.number_of_products %}
 
-      {% render 'product-card': product: product %}
+      {% render 'product-card', product: product %}
 
     {% else %}
       {% for item in (1..4) %}
@@ -76,4 +76,13 @@
       }
     ]
   }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'product-card': product: product %}"
+  to: "{% render 'product-card', product: product %}"
+  position: 798..843
+{%- endcomment -%}
